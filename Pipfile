@@ -16,6 +16,9 @@ pandas = "*"
 jupyter = "*"
 ipykernel = "*"
 blackcellmagic = "*"
+pymongo = "*"
+flask-pymongo = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"
