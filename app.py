@@ -10,11 +10,6 @@ mongo = PyMongo(app)
 
 @app.route("/")
 def index():
-    # mars = mongo.db.mars.find_one()
-    # if mars == None:
-    #     result = redirect("http://localhost:5000/scrape")
-    # else:
-    #     result = render_template("index.html", mars=mars)
     result = render_template("index.html")
     return result
 
