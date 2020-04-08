@@ -2,14 +2,9 @@ import pandas as pd
 import csv
 import json
 from sqlalchemy import create_engine
+from import_data import engine, DATABASE
 
-USER = "root"
-PASSWORD = ""
-HOST = "127.0.0.1"
-PORT = "3306"
-DATABASE = "covid_19"
 
-engine = create_engine(f"mysql+pymysql://{USER}:{PASSWORD}@{HOST}:{PORT}")
 engine.execute(f"CREATE DATABASE IF NOT EXISTS {DATABASE}")
 engine.execute(f"USE {DATABASE}")
 
