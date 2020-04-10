@@ -4,9 +4,10 @@ import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func, desc
-from flask import Flask, jsonify, render_template, redirect
+from flask import Flask, jsonify, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from db_config import engine, DATABASE
+# from db_config import engine, DATABASE
+from import_data import engine, data_import
 
 
 app = Flask(__name__)
@@ -24,7 +25,13 @@ def index():
     return result
 
 
-@app.route("/get_global_data")
+@app.route("/import_data")
+def import_data():
+    data_import()
+    return redirect(url_for("index"))
+
+
+@app.route("/global_data")
 def get_global_data():
     countries = (
         session.query(global_data.Country_Region)
