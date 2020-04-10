@@ -4,6 +4,7 @@ import json
 from sqlalchemy import create_engine
 from db_config import engine, DATABASE
 
+# engine = create_engine(JAWSDB_URL)
 us_confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
 us_deaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
 global_cases = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
@@ -124,6 +125,7 @@ def get_global_info():
     return global_covid_data
 
 
-insert_to_db("us_lookup", get_state_info())
-insert_to_db("us_covid_data", get_us_covid_info())
-insert_to_db("global_covid_data", get_global_info())
+def data_import():
+    insert_to_db("us_lookup", get_state_info())
+    insert_to_db("us_covid_data", get_us_covid_info())
+    insert_to_db("global_covid_data", get_global_info())
