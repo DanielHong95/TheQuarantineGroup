@@ -2,9 +2,9 @@ import pandas as pd
 import csv
 import json
 from sqlalchemy import create_engine
-# from db_config import engine, DATABASE
+from db_config import engine, DATABASE
 
-engine = create_engine(JAWSDB_URL)
+# engine = create_engine(JAWSDB_URL)
 us_confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
 us_deaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
 global_cases = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
