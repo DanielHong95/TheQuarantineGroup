@@ -10,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    os.environ.get("JAWSDB_URL", "") or "sqlite:///covid19.sqlite"
+    os.environ.get("JAWSDB_URL", "") or "sqlite:///Data/covid19.sqlite"
 )
 db = SQLAlchemy(app)
 
@@ -34,19 +34,21 @@ def country_snapshot():
     result = render_template("country_snapshot.html")
     return result
 
+
 @app.route("/global_data/<country>/<data_point>")
 def get_country_data(country, data_point):
-    qry =(
-    session.query(
-        global_data.ID,
-        global_data.Country_Region,
-        global_data.Date,
-        func.sum(global_data.Confirmed_Cases),
-        func.sum(global_data.Deaths),
-        func.sum(global_data.Recovered)
-    ).filter(global_data.Country_Region == country)
-     .group_by(global_data.ID, global_data.Country_Region, global_data.Date)
-    .order_by(global_data.ID)
+    qry = (
+        session.query(
+            global_data.ID,
+            global_data.Country_Region,
+            global_data.Date,
+            func.sum(global_data.Confirmed_Cases),
+            func.sum(global_data.Deaths),
+            func.sum(global_data.Recovered),
+        )
+        .filter(global_data.Country_Region == country)
+        .group_by(global_data.ID, global_data.Country_Region, global_data.Date)
+        .order_by(global_data.ID)
     ).statement
     country_results = pd.read_sql_query(qry, db.engine)
     data = {
@@ -96,6 +98,7 @@ def get_global_data():
 
     return jsonify(global_dict)
 
+
 @app.route("/import_data")
 def import_data():
     us_confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
@@ -112,8 +115,7 @@ def import_data():
 
     def insert_to_db(table_name, df):
         db.engine.execute(f"DELETE FROM {table_name}")
-        df.to_sql(name=table_name, con=db.engine, index_label="ID", if_exists = "append")
-        
+        df.to_sql(name=table_name, con=db.engine, index_label="ID", if_exists="append")
 
     # get state mapping data
     states_data = pd.DataFrame(
@@ -210,6 +212,7 @@ def import_data():
     insert_to_db("us_covid_data", us_covid_data)
     insert_to_db("global_covid_data", global_covid_data)
     return redirect(url_for("index"))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
