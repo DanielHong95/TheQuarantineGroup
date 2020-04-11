@@ -62,41 +62,66 @@ def get_country_data(country, data_point):
 
 @app.route("/global_data")
 def get_global_data():
-    countries = (
-        session.query(global_data.Country_Region)
-        .distinct()
-        .order_by(global_data.Country_Region)
-        .all()
-    )
-    global_covid_results = (
+    qry = (
         session.query(
+            global_data.ID,
             global_data.Country_Region,
             global_data.Date,
             func.sum(global_data.Confirmed_Cases),
             func.sum(global_data.Deaths),
             func.sum(global_data.Recovered),
         )
-        .group_by(global_data.Country_Region, global_data.Date)
-        .order_by(global_data.Country_Region)
-    ).all()
+        .group_by(global_data.ID, global_data.Country_Region, global_data.Date)
+        .order_by(global_data.ID)
+    ).statement
+    global_results = pd.read_sql_query(qry, db.engine)
+    data = {
+        "Country": global_results.Country_Region.values.tolist(),
+        "Date": global_results.Date.values.tolist(),
+        "Confirmed_Cases": global_results.sum_1.values.tolist(),
+        "Deaths": global_results.sum_2.values.tolist(),
+        "Recovered": global_results.sum_3.values.tolist(),
+    }
+    return jsonify(data)
 
-    def get_country_covid_data(country):
-        data = {}
-        for rec in global_covid_results:
-            if rec[0] == country:
-                data[rec[1]] = {
-                    "Confirmed_Cases": int(rec[2]),
-                    "Deaths": int(rec[3]),
-                    "Recovered": int(rec[4]),
-                }
-        return data
 
-    global_dict = [
-        {"Country": country[0], "Data": get_country_covid_data(country[0])}
-        for country in countries
-    ]
+# @app.route("/global_data")
+# def get_global_data():
+#     countries = (
+#         session.query(global_data.Country_Region)
+#         .distinct()
+#         .order_by(global_data.Country_Region)
+#         .all()
+#     )
+#     global_covid_results = (
+#         session.query(
+#             global_data.Country_Region,
+#             global_data.Date,
+#             func.sum(global_data.Confirmed_Cases),
+#             func.sum(global_data.Deaths),
+#             func.sum(global_data.Recovered),
+#         )
+#         .group_by(global_data.Country_Region, global_data.Date)
+#         .order_by(global_data.Country_Region)
+#     ).all()
 
-    return jsonify(global_dict)
+#     def get_country_covid_data(country):
+#         data = {}
+#         for rec in global_covid_results:
+#             if rec[0] == country:
+#                 data[rec[1]] = {
+#                     "Confirmed_Cases": int(rec[2]),
+#                     "Deaths": int(rec[3]),
+#                     "Recovered": int(rec[4]),
+#                 }
+#         return data
+
+#     global_dict = [
+#         {"Country": country[0], "Data": get_country_covid_data(country[0])}
+#         for country in countries
+#     ]
+
+#     return jsonify(global_dict)
 
 
 @app.route("/import_data")
