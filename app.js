@@ -1,4 +1,4 @@
-// map
+// d3 map
 map = {
     const context = DOM.context2d(width, height);
     const path = d3.geoPath(projection, context);
