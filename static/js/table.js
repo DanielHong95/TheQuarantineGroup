@@ -48,7 +48,6 @@ d3.json(“/global_data”).then((global_data) {
   function handleResetButtonClick(){
     renderTable();
   })
-
 });
 
-renderTable();
+renderTable()
