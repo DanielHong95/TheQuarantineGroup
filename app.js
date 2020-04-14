@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // map
+=======
+// d3 map
+>>>>>>> 0582e4fe66fec3fa399ef331c97566a1c8267de5
 map = {
     const context = DOM.context2d(width, height);
     const path = d3.geoPath(projection, context);
